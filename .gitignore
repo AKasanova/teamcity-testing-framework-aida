@@ -40,3 +40,48 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# macOS system files
+.DS_Store
+
+# IDE and Editor Files
+.idea/
+.vscode/
+*.iml
+
+# Logs and Cache
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS or User-Specific Files
+*.swp
+*.swo
+*.swn
+*.sublime-workspace
+*.bak
+*.tmp
+
+# Build Artifacts
+/build/
+node_modules/
+dist/
+coverage/
+target/
+out/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Java
+*.class
+*.war
+*.jar
+
+# Git
+.gitignore
