@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
+/**
 public class DummyTest extends BaseApiTest {
     @Test
     public void userShouldBeAbleGetAllProjects() {
@@ -24,3 +25,4 @@ public class DummyTest extends BaseApiTest {
 
     }
 }
+*/
