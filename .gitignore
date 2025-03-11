@@ -86,3 +86,6 @@ __pycache__/
 # Git
 .gitignore
 target/
+datadir/
+
+
