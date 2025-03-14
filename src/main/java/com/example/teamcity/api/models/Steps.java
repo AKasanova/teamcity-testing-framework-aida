@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Steps {
-    private Integer count;
+    @Builder.Default
+    private Integer count = 0;
     private List<Step> step;
+
 }

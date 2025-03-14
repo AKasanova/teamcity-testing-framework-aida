@@ -4,8 +4,6 @@ import com.example.teamcity.api.models.Project;
 import com.example.teamcity.api.requests.CheckedRequests;
 import com.example.teamcity.api.requests.unchecked.UncheckedBase;
 import com.example.teamcity.api.spec.Specifications;
-import org.apache.http.HttpStatus;
-import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -13,6 +11,7 @@ import java.util.Arrays;
 import static com.example.teamcity.api.enums.Endpoint.PROJECTS;
 import static com.example.teamcity.api.enums.Endpoint.USERS;
 import static com.example.teamcity.api.generators.TestDataGenerator.generate;
+import static com.example.teamcity.api.spec.ValidationResponseSpecifications.checkProjectWithIdAlreadyExist;
 import static io.qameta.allure.Allure.step;
 
 @Test(groups = {"Regression"})
@@ -26,21 +25,20 @@ public class ProjectTest extends BaseApiTest {
 
         var createdProject = userCheckRequests.<Project>getRequest(PROJECTS).read(testData.getProject().getId());
 
-        softy.assertEquals(testData.getProject().getName(), createdProject.getName(), "Project name is not correct");
+        softy.assertEquals(createdProject, testData.getProject(), "Project name is not correct");
     }
     @Test(description = "User should not be able to create 2 projects with the same id", groups = {"Negative", "CRUD"})
     public void userCreatesTwoProjectsWithTheSameIdTest(){
-        var ProjectWithSameId = generate(Arrays.asList(testData.getProject()), Project.class, testData.getProject().getId());
+        var projectWithSameId = generate(Arrays.asList(testData.getProject()), Project.class, testData.getProject().getId());
 
         superUserCheckRequests.getRequest(USERS).create(testData.getUser());
         var userCheckRequests = new CheckedRequests(Specifications.authSpec(testData.getUser()));
 
         userCheckRequests.getRequest(PROJECTS).create(testData.getProject());
-        new UncheckedBase(Specifications.authSpec(testData.getUser()), PROJECTS)
-                .create(ProjectWithSameId)
-                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body(Matchers.containsString("Project ID \"%s\" is already used by another project".formatted(testData.getProject().getId())));
 
+        new UncheckedBase(Specifications.authSpec(testData.getUser()), PROJECTS)
+                .create(projectWithSameId)
+                .then().spec(checkProjectWithIdAlreadyExist(testData.getProject().getId()));
     }
     @Test(description = "User should be able to copy a project", groups = {"Positive", "CRUD"})
     public void userCanCopyExistingProjectTest() {
