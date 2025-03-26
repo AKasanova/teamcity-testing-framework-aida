@@ -2,10 +2,7 @@ package com.example.teamcity.api.spec;
 
 import com.example.teamcity.api.config.Config;
 import com.example.teamcity.api.models.User;
-import io.restassured.authentication.AuthenticationScheme;
-import io.restassured.authentication.BasicAuthScheme;
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
@@ -16,35 +13,41 @@ import java.util.List;
 public class Specifications {
     private static Specifications spec;
 
-    private Specifications() {}
 
-    public static Specifications getSpec() {
-        if (spec == null) {
-            spec = new Specifications();
-        }
-        return spec;
-    }
-
-    private RequestSpecBuilder reqBuilder() {
+    private static RequestSpecBuilder reqBuilder() {
+        var requestBuilder = new RequestSpecBuilder();
         RequestSpecBuilder reqBuilder = new RequestSpecBuilder();
-        reqBuilder.setBaseUri("http://" + Config.getProperty("host")).build();
-        reqBuilder.setContentType(ContentType.JSON);
-        reqBuilder.setAccept(ContentType.JSON);
-        reqBuilder.addFilters(List.of(new RequestLoggingFilter(), new ResponseLoggingFilter()));
-        return reqBuilder;
+       // reqBuilder.setBaseUri("http://" + Config.getProperty("host")).build();
+        requestBuilder.setContentType(ContentType.JSON);
+        requestBuilder.setAccept(ContentType.JSON);
+        requestBuilder.addFilters(List.of(new RequestLoggingFilter(), new ResponseLoggingFilter()));
+        return requestBuilder;
     }
 
-    public RequestSpecification unauthSpec() {
-        return reqBuilder().build();
+    public static RequestSpecification superUserSpec(){
+       var requestBuilder = reqBuilder();
+        requestBuilder.setBaseUri("http://%s:%s@%s".formatted( "", Config.getProperty("superUserToken"), Config.getProperty("host")));
+       return requestBuilder.build();
     }
 
-    public RequestSpecification authSpec(User user) {
-        BasicAuthScheme basicAuthScheme = new BasicAuthScheme();
-        basicAuthScheme.setUserName(user.getUser());
+    public static RequestSpecification unauthSpec() {
+       var requestBuilder = reqBuilder();
+       return requestBuilder.build();
+    }
+
+   public static RequestSpecification authSpec(User user) {
+        /**BasicAuthScheme basicAuthScheme = new BasicAuthScheme();
+         *
+         *basicAuthScheme.setUserName(user.getUser());
         basicAuthScheme.setPassword(user.getPassword());
 
         return reqBuilder()
                 .setAuth(basicAuthScheme)
                 .build();
-    }
+
+        */
+       var requestBuilder = reqBuilder();
+       requestBuilder.setBaseUri("http://%s:%s@%s".formatted(user.getUsername(), user.getPassword(), Config.getProperty("host")));
+       return requestBuilder.build();
+   }
 }
