@@ -58,7 +58,7 @@ public class CreateBuildConfigurationTest extends BaseUiTest {
         var initialBuildTypesCount = superUserCheckRequests.<BuildType>getRequest(BUILD_TYPES).read(createdProject.getId() + "/buildTypes").getCount();
 
 
-      CreateNewBuildConfigurationPage.open(createdProject.getId()).createForm("")
+      CreateNewBuildConfigurationPage.open(createdProject.getId()).createFormWithError("")
               .errorMessage.shouldHave(Condition.exactText("URL must not be empty"));
 
       var newBuildTypesCount = superUserCheckRequests.<BuildType>getRequest(PROJECT_BUILD_TYPES).read(createdProject.getId() + "/buildTypes").getCount();

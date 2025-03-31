@@ -20,6 +20,11 @@ public class CreateNewBuildConfigurationPage extends CreateBasePage {
 
     public CreateNewBuildConfigurationPage createForm(String url) {
         baseCreateForm(url);
+        return this;
+    }
+
+    public CreateNewBuildConfigurationPage createFormWithError(String url) {
+        baseCreateForm(url);
         errorMessage.shouldBe(Condition.visible, BASE_WAITING);
         return this;
     }
