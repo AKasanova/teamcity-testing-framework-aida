@@ -1,5 +1,5 @@
 ### Constants
-@host = 192.168.178.26
+@host = 192.168.100.156
 @port = 8111
 @user = admin
 @password = admin
@@ -15,7 +15,7 @@ Accept: application/json
 
 ### Step 1: Create project
 # @no-cookie-jar
-POST http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/projects
+GET http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/projects/test_ArBrHbLhTk/buildTypes
 Content-Type: application/json
 Accept: application/json
 
@@ -23,8 +23,8 @@ Accept: application/json
   "parentProject": {
     "locator": "_Root"
   },
-  "name": "{{projectId}}",
-  "id": "{{projectId}}",
+  "name": "{{test_ArBrHbLhTk}}",
+  "id": "{{test_ArBrHbLhTk}}",
   "copyAllAssociatedSettings": true
 }
 ### Step 2: Create build type
