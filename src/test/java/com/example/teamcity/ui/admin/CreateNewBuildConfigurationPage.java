@@ -1,6 +1,7 @@
 package com.example.teamcity.ui.admin;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.example.teamcity.api.models.BuildType;
@@ -11,8 +12,6 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class CreateNewBuildConfigurationPage extends CreateBasePage {
     private static final String BUILD_CONFIGURATION_SHOW_MODE = "createBuildTypeMenu";
-    public SelenideElement errorMessage = $(By.xpath("//span[@id='error_url' and text()='URL must not be empty']"));
-
 
     public static CreateNewBuildConfigurationPage open(String projectId) {
         return Selenide.open(CREATE_URL.formatted(projectId, BUILD_CONFIGURATION_SHOW_MODE), CreateNewBuildConfigurationPage.class);
@@ -20,12 +19,13 @@ public class CreateNewBuildConfigurationPage extends CreateBasePage {
 
     public CreateNewBuildConfigurationPage createForm(String url) {
         baseCreateForm(url);
+        connectionSuccessfulMessage.should(Condition.appear, BASE_WAITING);
         return this;
     }
 
-    public CreateNewBuildConfigurationPage createFormWithError(String url) {
+    public CreateNewBuildConfigurationPage createFormWithError(String url, String errorText) {
         baseCreateForm(url);
-        errorMessage.shouldBe(Condition.visible, BASE_WAITING);
+        $(Selectors.byText(errorText)).shouldBe(Condition.visible);
         return this;
     }
 
@@ -33,6 +33,7 @@ public class CreateNewBuildConfigurationPage extends CreateBasePage {
     public CreatedBuildConfigurationPage setupBuildConfiguration(String buildTypeName) {
         buildTypeNameInput.val(buildTypeName);
         submitButton.click();
+        submitButton.shouldNotBe(Condition.interactable);
         return Selenide.page(CreatedBuildConfigurationPage.class);
     }
 

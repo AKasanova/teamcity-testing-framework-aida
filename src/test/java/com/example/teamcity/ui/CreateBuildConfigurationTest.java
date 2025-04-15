@@ -4,6 +4,7 @@ import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.models.BuildType;
 import com.example.teamcity.api.models.Project;
 import com.example.teamcity.api.requests.CheckedRequests;
+import com.example.teamcity.api.requests.UncheckedRequests;
 import com.example.teamcity.api.spec.Specifications;
 import com.example.teamcity.ui.admin.CreateNewBuildConfigurationPage;
 import com.example.teamcity.ui.pages.ProjectPage;
@@ -34,7 +35,7 @@ public class CreateBuildConfigurationTest extends BaseUiTest {
                 .setupBuildConfiguration(buildType.getName());
 
         // проверка состояния API
-        var createdBuildType = superUserCheckRequests.<Project>getRequest(Endpoint.PROJECTS).read(createdProject.getId());
+        var createdBuildType = superUserCheckRequests.<BuildType>getRequest(BUILD_TYPES).read("name:" + buildType.getName());
         softy.assertNotNull(createdBuildType);
 
 
@@ -55,16 +56,11 @@ public class CreateBuildConfigurationTest extends BaseUiTest {
 
         var createdProject = userCheckRequests.<Project>getRequest(PROJECTS).read(testData.getProject().getId());
 
-        var initialBuildTypesCount = superUserCheckRequests.<BuildType>getRequest(BUILD_TYPES).read(createdProject.getId() + "/buildTypes").getCount();
+        var initialBuildTypesCount = superUserCheckRequests.<BuildType>getRequest(Endpoint.BUILD_TYPES).read("").getCount();
 
+        CreateNewBuildConfigurationPage.open(createdProject.getId()).createFormWithError("", "URL must not be empty");
 
-      CreateNewBuildConfigurationPage.open(createdProject.getId()).createFormWithError("")
-              .errorMessage.shouldHave(Condition.exactText("URL must not be empty"));
-
-      var newBuildTypesCount = superUserCheckRequests.<BuildType>getRequest(PROJECT_BUILD_TYPES).read(createdProject.getId() + "/buildTypes").getCount();
+      var newBuildTypesCount = superUserCheckRequests.<BuildType>getRequest(Endpoint.BUILD_TYPES).read("").getCount();
       softy.assertEquals(newBuildTypesCount, initialBuildTypesCount);
-
-
-
     }
 }

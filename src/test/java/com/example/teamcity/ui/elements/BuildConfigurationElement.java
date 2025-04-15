@@ -12,10 +12,7 @@ public class BuildConfigurationElement extends BasePageElement{
 
     public BuildConfigurationElement(SelenideElement element) {
         super(element);
-        this.name = find("div[class*='Details__heading']");
+        this.name = find("span[class*='MiddleEllipsis__searchable']");
         this.button = find("button");
-
-
-
     }
 }

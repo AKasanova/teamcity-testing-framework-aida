@@ -16,7 +16,7 @@ public class ProjectPage extends BasePage {
 
     public SelenideElement title = $("span[class*='ProjectPageHeader']");
     private SelenideElement header = $(".MainPanel__router--gF > div");
-    public ElementsCollection buildTypeNameElements = $$("div[class*='BuildsByBuildType__container--YBuildsByBuildType__container--Y']");
+    public ElementsCollection buildTypeNameElements = $$("div[class*='BuildTypes__item']");
 
     public static ProjectPage open(String projectId) {
         return Selenide.open(PROJECT_URL.formatted(projectId), ProjectPage.class);
